@@ -19,7 +19,8 @@ data1$field_position = as.factor(data1$field_position)
 priors_nonlinear = c(
   set_prior("normal(0, 10)", class = "Intercept"),
   set_prior("normal(0, 5)", class = "b"),
-  set_prior("normal(0, 5)", class = "sds")
+  set_prior("normal(0, 5)", class = "sds"),
+  set_prior("normal(0,5)", class = "shape", lb=0)
   # set_prior(exponential(1), class = "sigma")  # Prior for residual variance
 )
 
@@ -39,11 +40,11 @@ model_test <- add_criterion(model_test, "loo",moment_match = TRUE)
 
 summary(model_test)
 
-
 # best team model with linear
 prior_linear = c(
   set_prior("normal(0, 10)", class = "Intercept"),
-  set_prior("normal(0, 5)", class = "b", lb = 0)
+  set_prior("normal(0, 5)", class = "b"),
+  set_prior("normal(0,5)", class = "shape", lb=0)
   #set_prior("normal(0, 5)", class = "sds")
   # set_prior(exponential(1), class = "sigma")  # Prior for residual variance
 )
