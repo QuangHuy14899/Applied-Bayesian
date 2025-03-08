@@ -16,12 +16,12 @@ data1$field_position = as.factor(data1$field_position)
 
 
 # best team model with nonlinear
-priors_nonlinear = c(
+priors_team_nonlinear = c(
   set_prior("normal(0, 10)", class = "Intercept"),
-  set_prior("normal(0, 5)", class = "b"),
-  set_prior("normal(0, 5)", class = "sds"),
+  set_prior("normal(0, 5)", class = "sd", group = "field_position", lb=0),  # Prior for σ_field_position
+  set_prior("normal(0, 5)", class = "sd", group = "team", lb=0),
+  set_prior("normal(0, 5)", class = "sds", lb=0),
   set_prior("normal(0,5)", class = "shape", lb=0)
-  # set_prior(exponential(1), class = "sigma")  # Prior for residual variance
 )
 
 model_test <- brm(
@@ -32,7 +32,7 @@ model_test <- brm(
     (1|team),
   data = data1,
   family = negbinomial(),
-  prior = priors_nonlinear,
+  prior = priors_team_nonlinear,
   control = list(adapt_delta = 0.99),
   save_pars = save_pars(all = TRUE)
 )
@@ -41,12 +41,12 @@ model_test <- add_criterion(model_test, "loo",moment_match = TRUE)
 summary(model_test)
 
 # best team model with linear
-prior_linear = c(
+prior_team_linear = c(
   set_prior("normal(0, 10)", class = "Intercept"),
   set_prior("normal(0, 5)", class = "b"),
+  set_prior("normal(0, 5)", class = "sd", group = "field_position", lb=0),
+  set_prior("normal(0, 5)", class = "sd", group = "team", lb=0),
   set_prior("normal(0,5)", class = "shape", lb=0)
-  #set_prior("normal(0, 5)", class = "sds")
-  # set_prior(exponential(1), class = "sigma")  # Prior for residual variance
 )
 
 model_test_lin <- brm(
@@ -57,7 +57,7 @@ model_test_lin <- brm(
     (1|team),
   data = data1,
   family = negbinomial(),
-  prior = prior_linear,
+  prior = prior_team_linear,
   control = list(adapt_delta = 0.99),
   save_pars = save_pars(all = TRUE)
 )
@@ -68,6 +68,13 @@ summary(model_test_lin)
 
 
 # model for individual with nonlinear
+priors_player_nonlinear = c(
+  set_prior("normal(0, 10)", class = "Intercept"),
+  set_prior("normal(0, 5)", class = "sd", group = "field_position", lb=0),  # Prior for σ_field_position
+  set_prior("normal(0, 5)", class = "sds", lb=0),
+  set_prior("normal(0,5)", class = "shape", lb=0)
+)
+
 
 model <- brm(
   goal_contribution ~ 
@@ -76,7 +83,7 @@ model <- brm(
     (1|field_position),                              # Categorical predictors (gamma coefficients)
   family = negbinomial(),                                  # Poisson likelihood for count data
   data = data1,                                     # Data frame containing the variables
-  prior = priors_nonlinear,
+  prior = priors_player_nonlinear,
   control = list(adapt_delta = 0.99),                                 # Warm-up iterations per chain
   save_pars = save_pars(all = TRUE)
 )
@@ -85,6 +92,13 @@ model <- add_criterion(model, "loo",moment_match = TRUE)
 
 
 # model for individual with linear
+prior_player_linear = c(
+  set_prior("normal(0, 10)", class = "Intercept"),
+  set_prior("normal(0, 5)", class = "b"),
+  set_prior("normal(0, 5)", class = "sd", group = "field_position", lb=0),
+  set_prior("normal(0,5)", class = "shape", lb=0)
+)
+
 model_lin <- brm(
   goal_contribution ~ 
     attempts_on_target +
@@ -92,12 +106,12 @@ model_lin <- brm(
     (1|field_position),                              # Categorical predictors (gamma coefficients)
   family = negbinomial(),                                  # Poisson likelihood for count data
   data = data1,                                     # Data frame containing the variables
-  prior = prior_linear,
+  prior = prior_player_linear,
   control = list(adapt_delta = 0.99),                                 # Warm-up iterations per chain
   save_pars = save_pars(all = TRUE)
 )
 model_lin <- add_criterion(model_lin, "loo",moment_match = TRUE)
 
-
+summary(model)
 loo_compare(model_test,model,model_test_lin,model_lin)
 
