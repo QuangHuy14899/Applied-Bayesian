@@ -1,4 +1,6 @@
 # model for individual with nonlinear
+set.seed(1234)
+
 priors_player_nonlinear = c(
   set_prior("normal(0, 10)", class = "Intercept"),
   set_prior("normal(0, 5)", class = "sd", group = "field_position", lb=0),  # Prior for σ_field_position

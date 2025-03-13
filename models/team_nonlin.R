@@ -1,4 +1,6 @@
 # best team model with nonlinear
+set.seed(1234)
+
 priors_team_nonlinear = c(
   set_prior("normal(0, 10)", class = "Intercept"),                          # Prior for Intercept
   set_prior("normal(0, 5)", class = "sd", group = "field_position", lb=0),  # Prior for std of random effect field_position

@@ -1,4 +1,6 @@
 # best team model with linear
+set.seed(1234)
+
 prior_team_linear = c(
   set_prior("normal(0, 10)", class = "Intercept"),
   set_prior("normal(0, 5)", class = "b"),
