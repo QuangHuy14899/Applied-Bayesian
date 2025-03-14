@@ -1,5 +1,4 @@
 # model for individual with nonlinear
-set.seed(1234)
 
 priors_player_nonlinear = c(
   set_prior("normal(0, 10)", class = "Intercept"),

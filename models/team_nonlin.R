@@ -1,5 +1,4 @@
 # best team model with nonlinear
-set.seed(1234)
 
 priors_team_nonlinear = c(
   set_prior("normal(0, 10)", class = "Intercept"),                          # Prior for Intercept
