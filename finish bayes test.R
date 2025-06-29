@@ -13,6 +13,7 @@ data1 <- read.csv("C:/Users/Quang Huy/Desktop/7.Semester/Bayesian/UCL_football_d
 data1$goal_contribution = data1$goals + data1$assists
 data1 = na.omit(data1)
 data1$field_position = as.factor(data1$field_position)
+max(data1$goal_contribution)
 
 
 # best team model with nonlinear
@@ -115,3 +116,4 @@ model_lin <- add_criterion(model_lin, "loo",moment_match = TRUE)
 summary(model)
 loo_compare(model_test,model,model_test_lin,model_lin)
 
+model
